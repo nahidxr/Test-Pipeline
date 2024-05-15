@@ -3,6 +3,9 @@ pipeline {
     tools {
         maven "Maven-3.9.3"
     }
+    # triggers{
+    #     pollSCM('H/2 * * * *')
+    #  }
     environment {
         imageName = "nahid003/${JOB_NAME}:${BUILD_ID}"
     }
