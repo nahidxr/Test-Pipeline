@@ -29,8 +29,9 @@ kind: ConfigMap
 metadata:
   name: my-config-map
 data:
-  MYSQL_DATABASE: sparklmsdb
+  MYSQL_DATABASE: sparklmsdb 
   MYSQL_ROOT_USER: root
+    
 ---
 apiVersion: v1
 kind: Secret
@@ -46,7 +47,7 @@ kind: Deployment
 metadata:
   name: my-webserver-deployment
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: my-webserver
@@ -57,7 +58,7 @@ spec:
     spec:
       containers:
       - name: webserver
-        image: nahid003/nahid003/java-springboot-pipeline:12
+        image: nahid003/java-springboot-pipeline:12
         env:
         - name: MYSQL_HOST
           value: my-mysql-service
@@ -109,6 +110,7 @@ spec:
             secretKeyRef:
               name: mysql-secrets
               key: MYSQL_PASSWORD
+      
         - name: MYSQL_DATABASE
           valueFrom:
             configMapKeyRef:
@@ -121,6 +123,7 @@ spec:
               key: MYSQL_ROOT_USER
         ports:
         - containerPort: 3306
+        imagePullPolicy: Always
         volumeMounts:
         - name: mysql-persistent-storage
           mountPath: /var/lib/mysql
@@ -128,6 +131,7 @@ spec:
       - name: mysql-persistent-storage
         persistentVolumeClaim:
           claimName: mysql-pvc
+
 ---
 apiVersion: v1
 kind: Service
@@ -140,14 +144,3 @@ spec:
   - protocol: TCP
     port: 3306
     targetPort: 3306
-
-
-
-
-
-
-
-
-
-
-
