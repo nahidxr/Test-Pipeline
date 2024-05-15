@@ -77,6 +77,8 @@ spec:
   - protocol: TCP
     port: 8080
     targetPort: 8080
+    nodePort: 30090
+  type: NodePort
 ---
 apiVersion: apps/v1
 kind: StatefulSet
@@ -138,21 +140,6 @@ spec:
   - protocol: TCP
     port: 3306
     targetPort: 3306
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: my-ingress
-  annotations:
-    kubernetes.io/ingress.class: ingress-nginx
-spec:
-  rules:
-  - host: nex.elms.com
-    http:
-      paths:
-      - backend:
-          serviceName: my-webserver-service
-          servicePort: 8080
 
 
 
