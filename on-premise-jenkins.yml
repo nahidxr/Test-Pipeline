@@ -3,9 +3,11 @@ pipeline {
     tools {
         maven "Maven-3.9.3"
     }
+    # triggers{
+    #     pollSCM('H/2 * * * *')
+    #  }
     environment {
         imageName = "nahid003/${JOB_NAME}:${BUILD_ID}"
-        MAVEN_OPTS = '--add-opens jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED'
     }
 
     stages {
@@ -21,13 +23,16 @@ pipeline {
             }
         }
 
+
         stage('Docker Image Build') {
             steps {
                 script {
-                    dockerImage = docker.build(imageName)
+                dockerImage = docker.build(imageName)
                 }
             }
         }
+
+
 
         stage('Push to Docker Registry') {
             steps {
@@ -50,17 +55,17 @@ pipeline {
                 script {
                     withKubeConfig(credentialsId: 'kube-cred') {
                         sh 'sed -i "s/TAG/${BUILD_ID}/g" kubernetes-deploy/main.yml'
-                        def mysqlPodExists = sh(
+                        def myqlPodExists = sh(
                             script: 'kubectl get pod -l app=my-mysql -o name',
                             returnStatus: true
                         )
-                        def webServerPodExists = sh(
+                        def webServerPodtExists = sh(
                             script: 'kubectl get pod -l app=my-webserver -o name',
                             returnStatus: true
                         )
-                        if (webServerPodExists == 0 || mysqlPodExists == 0) {
+                        if (webServerPodtExists == 0 || myqlPodExists == 0) {
                             try {
-                                sh 'kubectl delete -f kubernetes-deploy/main.yml'
+                                sh 'kubectl delete -f main.yml'
                             } catch (Exception e) {
                                 echo "Error deleting pods: ${e.getMessage()}"
                             }
@@ -71,4 +76,5 @@ pipeline {
             }
         }
     }
+
 }
