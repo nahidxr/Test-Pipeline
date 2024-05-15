@@ -46,15 +46,7 @@ pipeline {
                 sh "docker rmi nahid003/${JOB_NAME}:${BUILD_ID}"
             }
         }
-       stage('Deploy to k8s'){
-            steps{
-                script{
-                       // Delete existing resources
-                    sh 'kubectl delete -f kubernetes-deploy/main.yml'
-                    kubernetesDeploy (configs: 'kubernetes-deploy/main.yml',kubeconfigId: 'kube-cred')
-                }
-            }
-        }
+       
 
 
     }
