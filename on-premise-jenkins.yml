@@ -50,38 +50,30 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 script {
-                    // Get the current namespace
-                    def namespace = sh (
-                        script: 'kubectl config view --minify --output "jsonpath={.contexts[0].context.namespace}"',
-                        returnStdout: true
-                    ).trim()
-
-                    // Ensure that the namespace is not empty
-                    if (namespace.empty) {
-                        error "Failed to retrieve namespace"
-                    }
-
-                    withKubeConfig(credentialsId: 'kube-cred') {
+                    withKubeConfig(
+                        credentialsId: 'kube-cred',
+                        serverUrl: 'https://172.20.10.220:6443'
+                    ) {
                         sh 'sed -i "s/TAG/${BUILD_ID}/g" kubernetes-deploy/main.yml'
                         
                         def myqlPodExists = sh(
-                            script: 'kubectl get pod -n ${namespace} -l app=my-mysql -o name',
+                            script: 'kubectl get pod -l app=my-mysql -o name',
                             returnStatus: true
                         )
                         def webServerPodExists = sh(
-                            script: 'kubectl get pod -n ${namespace} -l app=my-webserver -o name',
+                            script: 'kubectl get pod -l app=my-webserver -o name',
                             returnStatus: true
                         )
 
-                        if (myqlPodExists == 0 || webServerPodExists == 0) {
+                        if (webServerPodExists == 0 || myqlPodExists == 0) {
                             try {
-                                sh "kubectl delete -f main.yml -n ${namespace}"
+                                sh 'kubectl delete -f main.yml'
                             } catch (Exception e) {
                                 echo "Error deleting pods: ${e.getMessage()}"
                             }
                         }
 
-                        sh "kubectl apply -f kubernetes-deploy/main.yml -n ${namespace}"
+                        sh 'kubectl apply -f kubernetes-deploy/main.yml'
                     }
                 }
             }
