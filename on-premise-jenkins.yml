@@ -7,29 +7,13 @@ pipeline {
         pollSCM('H/2 * * * *')
      }
     environment {
-        DB_URL = credentials('onPremiseDbUrl')
-        DB_USERNAME = credentials('onPremiseUser')
-        DB_PASSWORD = credentials('onPremisePass')
-        APP_PROPERTIES_PATH = '/var/lib/jenkins/workspace/on-premise-deployment-pipeline/src/main/resources/application.properties'
         imageName = "nahid003/${JOB_NAME}:${BUILD_ID}"
     }
 
     stages {
         stage('Git Clone') {
             steps {
-                git branch: 'main', credentialsId: 'aws-git', url: 'https://github.com/mdnahidulislam1/ysd_B02_DevOps_Library_Management_System.git'
-            }
-        }
-
-        stage('Modify application.properties content') {
-            steps {
-                script {
-                    sh """
-                    sed -i "s|spring.datasource.url =.*|spring.datasource.url = \${DB_URL}|g" ${APP_PROPERTIES_PATH}
-                    sed -i "s|spring.datasource.username =.*|spring.datasource.username = \${DB_USERNAME}|g" ${APP_PROPERTIES_PATH}
-                    sed -i "s|spring.datasource.password =.*|spring.datasource.password = \${DB_PASSWORD}|g" ${APP_PROPERTIES_PATH}
-                    """
-                }
+                git branch: 'main', credentialsId: 'git_cred', url: 'https://github.com/nahidxr/Test-Pipeline.git'
             }
         }
 
