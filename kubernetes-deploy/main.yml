@@ -1,3 +1,4 @@
+
 apiVersion: v1
 kind: PersistentVolume
 metadata:
@@ -29,9 +30,9 @@ kind: ConfigMap
 metadata:
   name: my-config-map
 data:
-  MYSQL_DATABASE: sparklmsdb 
+  MYSQL_DATABASE: sparklmsdb
   MYSQL_ROOT_USER: root
-    
+
 ---
 apiVersion: v1
 kind: Secret
@@ -47,7 +48,7 @@ kind: Deployment
 metadata:
   name: my-webserver-deployment
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: my-webserver
@@ -58,7 +59,7 @@ spec:
     spec:
       containers:
       - name: webserver
-        image: nahid003/java-springboot-pipeline:12
+        image: nahid003/on-premise-deployment-pipeline:50
         env:
         - name: MYSQL_HOST
           value: my-mysql-service
@@ -110,7 +111,7 @@ spec:
             secretKeyRef:
               name: mysql-secrets
               key: MYSQL_PASSWORD
-      
+
         - name: MYSQL_DATABASE
           valueFrom:
             configMapKeyRef:
