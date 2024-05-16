@@ -8,6 +8,15 @@ pipeline {
     }
 
     stages {
+        stage('Preparation') {
+            steps {
+                script {
+                    // Clean workspace directory
+                    deleteDir()
+                }
+            }
+        }
+
         stage('Git Clone') {
             steps {
                 git branch: 'main', credentialsId: 'git_cred', url: 'https://github.com/nahidxr/Test-Pipeline.git'
@@ -20,11 +29,10 @@ pipeline {
             }
         }
 
-
         stage('Docker Image Build') {
             steps {
                 script {
-                dockerImage = docker.build(imageName)
+                    dockerImage = docker.build(imageName)
                 }
             }
         }
@@ -41,19 +49,18 @@ pipeline {
 
         stage('Docker Image Remove') {
             steps {
-                sh "docker rmi nahid003/${JOB_NAME}:${BUILD_ID}"
-            }
-        }
-        stage('Deploy to k8s'){
-            steps{
-                script{
-                    kubernetesDeploy (configs: 'kubernetes-deploy/main.yml',kubeconfigId: 'kube-cred')
+                script {
+                    sh "docker rmi \"nahid003/${JOB_NAME}:${BUILD_ID}\""
                 }
             }
         }
-      
 
-
+        stage('Deploy to k8s') {
+            steps {
+                script {
+                    kubernetesDeploy(configs: 'kubernetes-deploy/main.yml', kubeconfigId: 'kube-cred')
+                }
+            }
+        }
     }
-
 }
