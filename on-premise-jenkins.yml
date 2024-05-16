@@ -19,6 +19,14 @@ pipeline {
                 sh 'mvn clean install'
             }
         }
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('sonar-id') {
+                    sh 'mvn sonar:sonar'
+                }
+            }
+        }
+      
 
         stage('Docker Image Build') {
             steps {
