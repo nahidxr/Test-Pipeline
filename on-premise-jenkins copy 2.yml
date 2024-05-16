@@ -19,12 +19,17 @@ pipeline {
                 sh 'mvn clean install'
             }
         }
-
+        
         stage('SonarQube Analysis') {
             steps {
-                // Execute SonarQube analysis
-                withSonarQubeEnv('sonarqube') {
-                    sh ' mvn clean verify sonar:sonar'
+                script {
+                    sh """
+                        mvn clean verify sonar:sonar \
+                        -Dsonar.projectKey=nex-lms-project \
+                        -Dsonar.projectName='nex-lms-project' \
+                        -Dsonar.host.url=http://192.168.5.223:9000 \
+                        -Dsonar.token=sqp_2371983cf9dd05fefa0f74c1de11ff384a317318
+                    """
                 }
             }
         }
