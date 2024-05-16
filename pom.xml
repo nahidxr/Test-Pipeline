@@ -61,12 +61,6 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<version>1.18.20</version> <!-- Update to the latest version -->
-			<scope>provided</scope>
-		</dependency>
 	</dependencies>
 
 	<build>
@@ -75,27 +69,14 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
-			<!-- <plugin>
+			<!--<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
 				<version>3.2.0</version>
 				<configuration>
 					<outputDirectory>${project.build.outputDirectory}/static</outputDirectory>
 				</configuration>
-			</plugin> -->
-			<plugin>
-				<groupId>org.projectlombok</groupId>
-				<artifactId>lombok-maven-plugin</artifactId>
-				<version>1.18.20.0</version> <!-- Update to the latest version -->
-				<executions>
-					<execution>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>delombok</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
+			</plugin>-->
 		</plugins>
 	</build>
 
