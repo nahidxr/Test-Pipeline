@@ -8,6 +8,15 @@ pipeline {
     }
 
     stages {
+        stage('Preparation') {
+            steps {
+                script {
+                    // Clean workspace directory
+                    deleteDir()
+                }
+            }
+        }
+
         stage('Git Clone') {
             steps {
                 git branch: 'main', credentialsId: 'git_cred', url: 'https://github.com/nahidxr/Test-Pipeline.git'
@@ -51,17 +60,17 @@ pipeline {
                 script {
                     withKubeConfig(credentialsId: 'kube-auth') {
                         sh 'sed -i "s/TAG/${BUILD_ID}/g" kubernetes-deploy/main.yml'
-                        def mysqlPodExists = sh(
+                        def myqlPodExists = sh(
                             script: 'kubectl get pod -l app=my-mysql -o name',
                             returnStatus: true
                         )
-                        def webServerPodExists = sh(
+                        def webServerPodtExists = sh(
                             script: 'kubectl get pod -l app=my-webserver -o name',
                             returnStatus: true
                         )
-                        if (webServerPodExists == 0 || mysqlPodExists == 0) {
+                        if (webServerPodtExists == 0 || myqlPodExists == 0) {
                             try {
-                                sh 'kubectl delete -f kubernetes-deploy/main.yml'
+                                sh 'kubectl delete -f main.yml'
                             } catch (Exception e) {
                                 echo "Error deleting pods: ${e.getMessage()}"
                             }
