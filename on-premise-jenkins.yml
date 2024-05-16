@@ -19,18 +19,13 @@ pipeline {
                 sh 'mvn clean install'
             }
         }
-        stage('SonarQube Analysis') {
+         stage('SonarQube Analysis') {
             steps {
-                script {
-                    // Execute SonarQube scanner
-                    withSonarQubeEnv('sonar') {
-                        sh """
-                            sonar-scanner \
-                            -Dsonar.projectKey=nex-lms-project \
-                            -Dsonar.sources=src \
-                            -Dsonar.host.url=http://192.168.5.223:9000 \
-                            -Dsonar.login=sqa_6f41a83856b3923f20a360254bc745b632a03001
-                        """
+                withCredentials([string(credentialsId: 'sonar-id', variable: 'SONARQUBE_TOKEN')]) {
+                    withSonarQubeEnv('sonarqube') {
+                        script {
+                            sh "mvn sonar:sonar -Dsonar.login=${SONARQUBE_TOKEN}"
+                        }
                     }
                 }
             }
