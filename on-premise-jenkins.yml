@@ -49,7 +49,7 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 script {
-                    withKubeConfig([credentialsId: 'kube-auth', serverUrl: 'https://172.20.10.220:6443']) {
+                    withKubeConfig(credentialsId: 'kube-auth') {
                         sh 'sed -i "s/TAG/${BUILD_ID}/g" kubernetes-deploy/main.yml'
                         def mysqlPodExists = sh(
                             script: 'kubectl get pod -l app=my-mysql -o name',
