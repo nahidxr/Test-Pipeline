@@ -44,6 +44,13 @@ pipeline {
                 sh "docker rmi nahid003/${JOB_NAME}:${BUILD_ID}"
             }
         }
+        stage('Deploy to k8s'){
+            steps{
+                script{
+                    kubernetesDeploy (configs: 'kubernetes-deploy/main.yml',kubeconfigId: 'kube-cred')
+                }
+            }
+        }
       
 
 

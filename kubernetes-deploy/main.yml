@@ -59,7 +59,7 @@ spec:
     spec:
       containers:
       - name: webserver
-        image: nahid003/on-premise-deployment-pipeline:50
+        image: nahid003/java-springboot-pipeline:15
         env:
         - name: MYSQL_HOST
           value: my-mysql-service
