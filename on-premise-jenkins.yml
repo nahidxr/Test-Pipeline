@@ -21,10 +21,10 @@ pipeline {
         }
          stage('SonarQube Analysis') {
             steps {
-                withCredentials([string(credentialsId: 'sonar-id', variable: 'SONARQUBE_TOKEN')]) {
+                withCredentials([string(credentialsId: 'sonar-id']) {
                     withSonarQubeEnv('sonarqube') {
                         script {
-                            sh "mvn sonar:sonar -Dsonar.login=${SONARQUBE_TOKEN}"
+                            sh "mvn sonar:sonar"
                         }
                     }
                 }
