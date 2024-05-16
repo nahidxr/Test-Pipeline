@@ -24,7 +24,7 @@ pipeline {
             steps {
                 // Execute SonarQube analysis
                 withSonarQubeEnv('sonarqube') {
-                    sh ' mvn clean verify sonar:sonar'
+                    sh 'mvn clean package sonar:sonar'
                 }
             }
         }
